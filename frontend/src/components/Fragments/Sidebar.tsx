@@ -20,6 +20,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const drawerWidth = 180;
 
@@ -78,7 +79,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
@@ -87,8 +87,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
+  const { user, token, setToken, setUser } = useAuthContext();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -99,8 +98,8 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    setToken(null);
+    setUser(null);
 
     return navigate("/login");
   };
@@ -115,7 +114,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
     <Box bgcolor={"darkgrey"} height={"100dvh"} sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar sx={{display:'flex', justifyContent:'space-between'}}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -131,7 +130,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Welcome, {JSON.parse(user || "{}").firstName}
+            Welcome, {user?.firstName}
           </Typography>
           <Button color="error" variant="contained" onClick={handleLogout}>
             Logout

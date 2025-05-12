@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import FormLayout from "../components/Layouts/FormLayout";
 import FormInput from "../components/Widgets/FormInput";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -18,6 +25,7 @@ const EditProductPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { token } = useAuthContext();
 
   useEffect(() => {
     if (id) {
@@ -25,7 +33,7 @@ const EditProductPage = () => {
         try {
           const { data } = await axios.get(`${BASE_URL}/api/inventory/${id}`, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
           });
           setFormData(data.data);
@@ -36,7 +44,7 @@ const EditProductPage = () => {
 
       fetchProductData();
     }
-  }, [id]);
+  }, [id, token]);
 
   const handleOnSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +53,7 @@ const EditProductPage = () => {
     try {
       await axios.put(`${BASE_URL}/api/inventory/${id}`, formData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       navigate("/inventory");

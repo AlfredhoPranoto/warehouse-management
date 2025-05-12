@@ -14,6 +14,7 @@ import { TextField, Typography } from "@mui/material";
 import { useDebounce } from "../hooks/useDebounce";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -31,6 +32,7 @@ const StaffPage = () => {
   const [filteredRows, setFilteredRows] = useState<GridRowsProp>();
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { token } = useAuthContext();
 
   useEffect(() => {
     const fetchStaff = async () => {
@@ -38,11 +40,10 @@ const StaffPage = () => {
         setLoading(true);
         const { data } = await axios.get(`${BASE_URL}/api/users`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        // Transform the data to include id property
         const transformedData = data.data.map((item: Staff) => ({
           ...item,
           id: item._id,
@@ -58,7 +59,7 @@ const StaffPage = () => {
     };
 
     fetchStaff();
-  }, []);
+  }, [token]);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "Id", flex: 1 },
@@ -137,13 +138,13 @@ const StaffPage = () => {
   }, [debouncedSearchText, rows]);
 
   const handleEditClick = (id: GridRowId) => () => {
-    return navigate(`/users/edit/${id}`);
+    return navigate(`/staffs/edit/${id}`);
   };
 
   const handleDeleteClick = (id: GridRowId) => async () => {
     await axios.delete(`${BASE_URL}/api/users/${id}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     const newRows = rows?.filter((row) => row._id !== id);

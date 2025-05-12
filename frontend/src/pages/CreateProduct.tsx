@@ -10,6 +10,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import FormLayout from "../components/Layouts/FormLayout";
 import FormInput from "../components/Widgets/FormInput";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -23,9 +24,9 @@ const CreateProductPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const {token} = useAuthContext();
+  
   const handleOnSubmit = async (e: React.FormEvent) => {
-    const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
       return;

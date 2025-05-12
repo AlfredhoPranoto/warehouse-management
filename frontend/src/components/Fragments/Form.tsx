@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import React from "react";
 
 type FormProps = {
   onSubmit: React.FormEventHandler<HTMLFormElement> | undefined;

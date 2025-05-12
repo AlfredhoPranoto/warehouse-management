@@ -5,12 +5,14 @@ import AuthLayout from "../components/Layouts/AuthLayout";
 import FormInput from "../components/Widgets/FormInput";
 import axios from "axios";
 import { useState } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setUser, setToken } = useAuthContext();
   const navigate = useNavigate();
 
   const handleOnSubmit = async (e: React.FormEvent) => {
@@ -20,8 +22,8 @@ const LoginPage = () => {
 
     try {
       const res = await axios.post(`${BASE_URL}/api/auth/login`, formData);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setToken(res.data.token);
+      setUser(res.data.user);
       navigate("/inventory");
     } catch (error) {
       console.error("Login error:", error);

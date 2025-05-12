@@ -10,6 +10,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import FormInput from "../components/Widgets/FormInput";
 import FormLayout from "../components/Layouts/FormLayout";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -23,17 +24,19 @@ const EditStaffPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const {token} = useAuthContext();
+
   useEffect(() => {
     if (id) {
       const fetchProductData = async () => {
         try {
           const { data } = await axios.get(`${BASE_URL}/api/users/${id}`, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
           });
           console.log(data.data);
-          setFormData(data.data); // Asumsikan response.data sudah sesuai dengan formData
+          setFormData(data.data);
         } catch (error) {
           console.error("Error fetching product data:", error);
         }
@@ -41,7 +44,7 @@ const EditStaffPage = () => {
 
       fetchProductData();
     }
-  }, [id]);
+  }, [id,token]);
   const handleOnSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -49,7 +52,7 @@ const EditStaffPage = () => {
     try {
       await axios.put(`${BASE_URL}/api/users/${id}`, formData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       navigate("/staffs");

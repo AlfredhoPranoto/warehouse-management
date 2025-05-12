@@ -18,6 +18,7 @@ import { TextField, Typography } from "@mui/material";
 import { useDebounce } from "../hooks/useDebounce";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 type Product = {
@@ -50,15 +51,13 @@ function EditToolbar() {
 const InventoryPage = () => {
   const navigate = useNavigate();
   const [rows, setRows] = useState<Product[]>();
-  // const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [searchText, setSearchText] = useState("");
   const [filteredRows, setFilteredRows] = useState<GridRowsProp>();
   const [loading, setLoading] = useState(true);
+  const { token } = useAuthContext();
 
-  // Fetch inventory data
   useEffect(() => {
     const fetchInventory = async () => {
-      const token = localStorage.getItem("token");
       try {
         setLoading(true);
         const { data } = await axios.get(`${BASE_URL}/api/inventory`, {
@@ -68,10 +67,9 @@ const InventoryPage = () => {
         });
         setLoading(false);
 
-        // Transform the data to include id property
         const transformedData = data.data.map((item: Product) => ({
           ...item,
-          id: item._id, // Add id property based on _id
+          id: item._id,
         }));
 
         setRows(transformedData);
@@ -84,7 +82,7 @@ const InventoryPage = () => {
     };
 
     fetchInventory();
-  }, []);
+  }, [token]);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "SKU", flex: 1 },
@@ -182,7 +180,7 @@ const InventoryPage = () => {
   const handleDeleteClick = (id: GridRowId) => async () => {
     await axios.delete(`${BASE_URL}/api/inventory/${id}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     const newRows = rows?.filter((row) => row._id !== id);
