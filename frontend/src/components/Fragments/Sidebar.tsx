@@ -102,7 +102,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    navigate("/login");
+    return navigate("/login");
   };
 
   useEffect(() => {

@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import Inventory from "../models/inventory.schema.js";
-import isEqual from "lodash/isEqual.js";
-import omit from "lodash/omit.js";
 export const getAllProduct = async (req, res) => {
   try {
-    const inventory = await Inventory.find({});
+    const inventory = await Inventory.find({}).select(
+      "_id name description price stock warehouse"
+    );;
     res
       .status(200)
       .json({ success: true, message: "Success get data", data: inventory });

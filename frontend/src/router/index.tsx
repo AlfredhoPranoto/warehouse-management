@@ -6,6 +6,7 @@ import { authMiddleware, roleMiddleware } from "../middleware/authMiddleware";
 import CreateProductPage from "../pages/CreateProduct";
 import EditProductPage from "../pages/EditProduct";
 import EditStaffPage from "../pages/EditStaff";
+import GuestLayout from "../components/Layouts/GuestLayout";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ export const router = createBrowserRouter([
     loader: roleMiddleware,
   },
   {
-    path: "/users/edit/:id",
+    path: "/staffs/edit/:id",
     element: <EditStaffPage />,
   },
   {
@@ -37,7 +38,10 @@ export const router = createBrowserRouter([
   },
   {
     path: "login",
-    element: <LoginPage />,
-    // loader: authMiddleware,
+    element: (
+      <GuestLayout>
+        <LoginPage />
+      </GuestLayout>
+    ),
   },
 ]);
