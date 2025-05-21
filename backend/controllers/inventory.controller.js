@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import Inventory from "../models/inventory.schema.js";
-export const getAllProduct = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
     const inventory = await Inventory.find({}).select(
       "_id name description price stock warehouse"

@@ -1,19 +1,19 @@
 import express from "express";
 import {
-  createStaff,
-  deleteStaff,
-  getAllStaff,
-  getStaff,
-  updateStaff,
+  createUser,
+  deleteUser,
+  getUsers,
+  getUser,
+  updateUser,
 } from "../controllers/user.controller.js";
 import { adminOnly, authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", authMiddleware, adminOnly, getAllStaff);
-router.get("/:id", authMiddleware, adminOnly, getStaff);
-router.post("/", authMiddleware,adminOnly, createStaff);
-router.put("/:id", authMiddleware,adminOnly, updateStaff);
-router.delete("/:id", authMiddleware,adminOnly, deleteStaff);
+router.get("/", authMiddleware, adminOnly, getUsers);
+router.get("/:id", authMiddleware, adminOnly, getUser);
+router.post("/", authMiddleware,adminOnly, createUser);
+router.put("/:id", authMiddleware,adminOnly, updateUser);
+router.delete("/:id", authMiddleware,adminOnly, deleteUser);
 
 export default router;
