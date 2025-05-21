@@ -42,7 +42,6 @@ A comprehensive Warehouse Management Application designed to streamline inventor
 - **Login Page Redesign** - Modernize authentication interface with enhanced security features
 - **Component Refactoring** - Apply DRY principles to inventory and staff management modules ✔
 - **Authentication Context** - Implement AuthContext for centralized token management and authentication flow
-- **OAuth** - Implements Google Sign in integration and others
 
 ### Long Term
 - Warehouse Realtime Management
